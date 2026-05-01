@@ -1,6 +1,11 @@
 <?php
 session_start(); // セッション（メモ帳）を開始
 
+// 💡 これを一時的に追加して、ブラウザをリロードしてください
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // 合言葉がまだなければ、新しく作ってメモ帳（セッション）に保存
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
