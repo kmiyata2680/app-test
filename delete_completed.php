@@ -1,6 +1,25 @@
 <?php
 session_start();
-require 'db_config.php'; // DB接続設定を共通化している場合
+
+// --- データベース接続設定 ---
+// 環境変数（Railway）から取得、なければローカル（localhost）の設定を使う
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'todo_app';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root'; // あなたのローカル環境のパスワードに合わせてください
+
+try {
+    $dsn = "mysql:host={$host};dbname={$dbname};charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+} catch (PDOException $e) {
+    // 接続失敗時にエラーを表示して止める
+    exit('DB接続エラーが発生しました: ' . $e->getMessage());
+}
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 🛡️ CSRFチェック（いつもの検問）
