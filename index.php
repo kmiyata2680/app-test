@@ -8,9 +8,22 @@ if (empty($_SESSION['csrf_token'])) {
 ?>
 
 <?php
-try {
 
-    require 'db_config.php';
+// --- データベース接続設定 ---
+// 環境変数（Railway）から取得、なければローカル（localhost）の設定を使う
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'todo_app';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: 'root'; // あなたのローカル環境のパスワードに合わせてください
+
+try {
+    $dsn = "mysql:host={$host};dbname={$dbname};charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    
+    // (以下、今までの処理を続ける)
 
 // --- 1. 新しいタスクの保存処理（これ1つにまとめます） ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['title'])) {
