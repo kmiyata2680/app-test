@@ -1,0 +1,6 @@
+# データベースの接続情報などを書いたファイルを除外
+db_config.php
+
+# OSが勝手に作るゴミファイルを除外
+.DS_Store
+Thumbs.db
